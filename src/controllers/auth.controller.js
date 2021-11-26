@@ -93,3 +93,10 @@ exports.postLogin = async(req, res) => {
         console.log(e)
     }
 }
+
+
+// Function Logout
+exports.postLogout = async(req, res) => {
+    res.clearCookie('session-token')
+    req.session.destroy(err => err ? console.log(e) : res.redirect('/auth/login'))
+}

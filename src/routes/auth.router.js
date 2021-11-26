@@ -5,7 +5,8 @@ const {
     getSignup,
     postSignup,
     getLogin,
-    postLogin
+    postLogin,
+    postLogout
 } = require('./../controllers/auth.controller')
 
 // Routes
@@ -16,6 +17,9 @@ router.post('/signup', postSignup)
 // Login
 router.get('/login', getLogin)
 router.post('/login', postLogin)
+
+// Logout
+router.post('/logout', postLogout)
 
 // Export
 module.exports = router
