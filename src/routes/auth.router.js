@@ -9,17 +9,19 @@ const {
     postLogout
 } = require('./../controllers/auth.controller')
 
+const { isLoggedIn, isLoggedOut } = require('./../middlewares')
+
 // Routes
 // Signup
-router.get('/signup', getSignup)
+router.get('/signup',isLoggedOut ,getSignup)
 router.post('/signup', postSignup)
 
 // Login
-router.get('/login', getLogin)
+router.get('/login',isLoggedOut ,getLogin)
 router.post('/login', postLogin)
 
 // Logout
-router.post('/logout', postLogout)
+router.post('/logout',isLoggedIn ,postLogout)
 
 // Export
 module.exports = router
