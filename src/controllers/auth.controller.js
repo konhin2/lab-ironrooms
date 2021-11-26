@@ -30,7 +30,27 @@ exports.postSignup = async(req, res) => {
     // Create user
     try {
         // Encript password
+        // Times of Hashing
+        const salt = await bcryptjs.genSalt(10)
+        // Passoword Hashed
+        const hashed = await bcryptjs.hash(password, salt)
 
+        // Create user
+        const createdUser = await User.create({
+            name,
+            email,
+            password: hashed,
+            imgUrl: 'https://library.kissclipart.com/20180906/wtq/kissclipart-user-profile-clipart-user-profile-computer-icons-15b5c3086edf7512.png'
+        })
+        // Create session
+        req.session.currentUser = {
+            _id: createdUser._id,
+            name: createdUser.name,
+            email: createdUser.email,
+            imgUrl: createdUser.imgUrl
+        }
+        // Redirection
+        res.redirect(`/user/${createdUser.name}`)
     } catch (error) {
         
     }
@@ -38,4 +58,38 @@ exports.postSignup = async(req, res) => {
 // Functions Login
 exports.getLogin = (req, res) => {
     res.render('auth/login')
+}
+
+exports.postLogin = async(req, res) => {
+    // Get Data
+    const { email, password } = req.body
+
+    // Find User
+    try{
+        const findUser = await User.findOne({email})
+        if(!findUser) {
+            return res.render('auth/login', {
+                msg: 'User not Found'
+            })
+        }
+        // Check Password - return boolean
+        const checkedPassword = await bcryptjs.compareSync(password, findUser.password)
+
+        if(!checkedPassword){
+            return res.render('auth/login', {
+                msg: 'Invalid Password'
+            })
+        }
+        req.session.currentUser = {
+            _id: findUser._id,
+            name: findUser.name,
+            email: findUser.email,
+            imgUrl: findUser.imgUrl
+        }
+        // Redirect
+        res.redirect(`/user/${findUser.name}`)
+
+    } catch(e){
+        console.log(e)
+    }
 }
