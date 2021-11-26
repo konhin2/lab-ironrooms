@@ -3,12 +3,14 @@ const router = require('express').Router()
 
 const { 
     getSignup,
-    getLogin
+    postSignup,
+    getLogin,
 } = require('./../controllers/auth.controller')
 
 // Routes
 // Signup
 router.get('/signup', getSignup)
+router.post('/signup', postSignup)
 
 // Login
 router.get('/login', getLogin)
